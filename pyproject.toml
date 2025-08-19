@@ -1,18 +1,15 @@
-[project]
+[tool.poetry]
 name = "telegram-bot"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Vika"}
-]
-readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "requests (>=2.32.3,<3.0.0)",
-    "aiogram (>=3.19.0,<4.0.0)"
-]
+description = "Telegram bot for warehouse project"
+authors = ["Vika"]
+package-mode = false
 
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "^3.19"
+gunicorn = "^23.0.0"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=1.8.0"]
 build-backend = "poetry.core.masonry.api"
