@@ -1,10 +1,10 @@
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
-from handlers.httpx_client import client
+from httpx_client import client
 from states.categories import CategoryStates
 from config import config
-from handlers.other import cancel_handler
+from other import cancel_handler
 router = Router()
 
 

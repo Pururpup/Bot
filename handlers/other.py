@@ -1,7 +1,7 @@
 from aiogram import F, Router
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
-from handlers.httpx_client import client
+from httpx_client import client
 from config import config
 
 router = Router()

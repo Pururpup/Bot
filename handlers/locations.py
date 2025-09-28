@@ -2,8 +2,8 @@ from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
 from config import config
-from handlers.httpx_client import client
-from handlers.other import cancel_handler
+from httpx_client import client
+from other import cancel_handler
 from states.locations import LocationStates
 
 router = Router()
