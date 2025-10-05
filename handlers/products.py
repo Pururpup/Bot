@@ -5,7 +5,7 @@ from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
 from httpx_client import client
 from states.products import ProductStates
 from config import config
-from other import cancel_handler
+from handlers.other import cancel_handler
 
 router = Router()
 
@@ -36,7 +36,7 @@ async def find_prod(message: Message, state: FSMContext):
 @router.message(ProductStates.wait_find_prod)
 async def find_product(message: Message, state: FSMContext):
     data = {'product_name': message.text, 'user': message.from_user.id}
-    response = await client.get(f'{config.API_URL}/product/', params=data)
+    response = await client.get(f'{config.API_URL}product/', params=data)
     if not response.json():
         await message.answer("Товар не найден")
 
@@ -60,7 +60,7 @@ async def find_product(message: Message, state: FSMContext):
 @router.message(F.text.lower() == "все товары")
 async def all_products(message: Message):
     data = {'user': message.from_user.id}
-    response = await client.get(f'{config.API_URL}/products/', params=data)
+    response = await client.get(f'{config.API_URL}products/', params=data)
     response_data = response.json()
     if not response_data:
         await message.answer("Список товаров пуст")
@@ -246,7 +246,7 @@ async def add_quantity_in_delivery(message: Message, state: FSMContext):
 
                 await state.set_state(ProductStates.wait_choose_category)
                 data = {'user': message.from_user.id}
-                response = await client.get(f'{config.API_URL}/categories/', params=data)
+                response = await client.get(f'{config.API_URL}categories/', params=data)
                 if response.status_code == 200:
                     categories = response.json()
                     kb = [
@@ -268,12 +268,12 @@ async def add_category(message: Message, state: FSMContext):
         await state.clear()
     else:
         data = {'user': message.from_user.id, 'cat_name': message.text}
-        response = await client.get(f'{config.API_URL}/category/', params=data)
+        response = await client.get(f'{config.API_URL}category/', params=data)
         await state.update_data(category=response.json()['id'])
 
         await state.set_state(ProductStates.wait_choose_loc_of_purchase)
         data = {'user': message.from_user.id}
-        response = await client.get(f'{config.API_URL}/locations/', params=data)
+        response = await client.get(f'{config.API_URL}locations/', params=data)
         if response.status_code == 200:
             locations_of_purchase = response.json()
             kb = [
@@ -292,12 +292,12 @@ async def add_loc_of_purchase(message: Message, state: FSMContext):
         await state.clear()
     else:
         data = {'user': message.from_user.id, 'loc_name': message.text}
-        response = await client.get(f'{config.API_URL}/location/', params=data)
+        response = await client.get(f'{config.API_URL}location/', params=data)
         await state.update_data(location_of_purchase=response.json()['id'])
 
         await state.set_state(ProductStates.wait_choose_loc_of_sale)
         data = {'user': message.from_user.id}
-        response = await client.get(f'{config.API_URL}/locations/', params=data)
+        response = await client.get(f'{config.API_URL}locations/', params=data)
         if response.status_code == 200:
             locations_of_sale = response.json()
             kb = [
@@ -316,7 +316,7 @@ async def add_loc_of_sale(message: Message, state: FSMContext):
         await state.clear()
     else:
         data = {'user': message.from_user.id, 'loc_name': message.text}
-        response = await client.get(f'{config.API_URL}/location/', params=data)
+        response = await client.get(f'{config.API_URL}location/', params=data)
         await state.update_data(location_of_sale=response.json()['id'])
 
         await state.set_state(ProductStates.wait_save_product)
@@ -337,7 +337,7 @@ async def save_product(message: Message, state: FSMContext):
         data_1 = {'user': message.from_user.id}
         data_2 = await state.get_data()
         data = data_2 | data_1
-        response = await client.post(f'{config.API_URL}/products/', data=data)
+        response = await client.post(f'{config.API_URL}products/', data=data)
         kb = [
             [KeyboardButton(text="Главное меню")]
         ]
@@ -355,7 +355,7 @@ async def del_prod(message: Message, state: FSMContext):
 @router.message(ProductStates.wait_del_prod)
 async def del_product(message: Message, state: FSMContext):
     data = {'user': message.from_user.id, 'product_name': message.text}
-    response = await client.delete(f'{config.API_URL}/product/', params=data)
+    response = await client.delete(f'{config.API_URL}product/', params=data)
     await message.answer(response.text.strip('"'))
     await state.clear()
 

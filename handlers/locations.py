@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
 from config import config
 from httpx_client import client
-from other import cancel_handler
+from handlers.other import cancel_handler
 from states.locations import LocationStates
 
 router = Router()
@@ -28,7 +28,7 @@ async def locations(message: Message):
 @router.message(F.text.lower() == "все локации")
 async def all_locations(message: Message):
     data = {'user': message.from_user.id}
-    response = await client.get(f'{config.API_URL}/locations/', params=data)
+    response = await client.get(f'{config.API_URL}locations/', params=data)
     response_data = response.json()
     if not response_data:
         await message.answer("Список локаций пуст")
@@ -72,7 +72,7 @@ async def add_location(message: Message, state: FSMContext):
         data_1 = {'user': message.from_user.id}
         data_2 = await state.get_data()
         data = data_2 | data_1
-        response = await client.post(f'{config.API_URL}/locations/', data=data)
+        response = await client.post(f'{config.API_URL}locations/', data=data)
         await message.answer(response.text.strip('"'))
         await state.clear()
 
@@ -86,6 +86,6 @@ async def del_loc(message: Message, state: FSMContext):
 @router.message(LocationStates.wait_del)
 async def del_location(message:Message, state: FSMContext):
     data = {'user': message.from_user.id, 'loc_name': message.text}
-    response = await client.delete(f'{config.API_URL}/location/', params=data)
+    response = await client.delete(f'{config.API_URL}location/', params=data)
     await message.answer(response.text.strip('"'))
     await state.clear()

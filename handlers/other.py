@@ -10,10 +10,10 @@ router = Router()
 async def send_welcome(message: Message):
     user_id = {'user': message.from_user.id}
     user_name = message.from_user.full_name
-    user_exists = await client.get(f'{config.API_URL}/user/', params=user_id)
+    user_exists = await client.get(f'{config.API_URL}user/', params=user_id)
     if not user_exists.json().get("is_exists"):
-        data = {'telegram_id': user_id, 'user_name': user_name}
-        response = await client.post(f'{config.API_URL}/user/', data=data)
+        data = {'telegram_id': message.from_user.id, 'user_name': user_name}
+        response = await client.post(f'{config.API_URL}user/', data=data)
 
     kb = [
         [KeyboardButton(text="Товары")],

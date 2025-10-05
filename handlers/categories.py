@@ -4,7 +4,7 @@ from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
 from httpx_client import client
 from states.categories import CategoryStates
 from config import config
-from other import cancel_handler
+from handlers.other import cancel_handler
 router = Router()
 
 
@@ -28,7 +28,7 @@ async def categories(message: Message):
 @router.message(F.text.lower() == "все категории")
 async def all_categories(message: Message):
     data = {'user': message.from_user.id}
-    response = await client.get(f'{config.API_URL}/categories/', params=data)
+    response = await client.get(f'{config.API_URL}categories/', params=data)
     response_data = response.json()
     if not response_data:
         await message.answer("Список категорий пуст")
@@ -53,7 +53,7 @@ async def add_category(message:Message, state: FSMContext):
         await cancel_handler(message)
     else:
         data = {'cat_name': message.text, 'user': message.from_user.id}
-        response = await client.post(f'{config.API_URL}/categories/', data=data)
+        response = await client.post(f'{config.API_URL}categories/', data=data)
         await message.answer(response.text.strip('"'))
     await state.clear()
 
@@ -67,7 +67,7 @@ async def del_cat(message: Message, state: FSMContext):
 @router.message(CategoryStates.wait_del)
 async def del_category(message:Message, state: FSMContext):
     data = {'user': message.from_user.id, 'cat_name': message.text}
-    response = await client.delete(f'{config.API_URL}/category/', params=data)
+    response = await client.delete(f'{config.API_URL}category/', params=data)
     await message.answer(response.text.strip('"'))
     await state.clear()
 
